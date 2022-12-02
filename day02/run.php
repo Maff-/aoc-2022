@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 $input = file_exists('input.txt') ? file_get_contents('input.txt') : null;
-//$input = null;
 
 $input ??= <<<EXMAPLE
 A Y
@@ -50,3 +49,25 @@ foreach ($input as [$m, $r]) {
 }
 
 echo 'Total score part 1: ', $totalScore, \PHP_EOL;
+
+// Part 2
+
+// Wins R(1)>S(3), S(3)>P(2), P(2)>R(1)
+$win = [1 => 2, 2 => 3, 3 => 1];
+$lose = array_flip($win);
+
+$totalScore = 0;
+foreach ($input as [$m, $r]) {
+    $m = ord($m) - $offsetMove;
+    $score = match($r) {
+        // lose
+        'X' => $lose[$m] + 0,
+        // draw
+        'Y' => $m + 3,
+        // win
+        'Z' => $win[$m] + 6,
+    };
+    $totalScore += $score;
+}
+
+echo 'Total score part 2: ', $totalScore, \PHP_EOL;
