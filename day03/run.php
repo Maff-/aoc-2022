@@ -30,3 +30,16 @@ foreach ($input as [$compartment1, $compartment2]) {
 }
 
 echo 'Part 1; Sum of priorities: ', $sum, \PHP_EOL;
+
+
+// Part 2
+
+$groups = array_chunk($input, 3);
+
+$sum = 0;
+foreach ($groups as $group) {
+    $badge = current(array_intersect(...array_map(static fn($compartments) => array_merge(...$compartments), $group)));
+    $sum += $priorities[$badge];
+}
+
+echo 'Part 2; Sum of badge priorities: ', $sum, \PHP_EOL;
