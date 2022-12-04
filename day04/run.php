@@ -26,3 +26,13 @@ foreach ($input as [$startA, $endA, $startB, $endB]) {
 }
 
 echo 'Part 1; Assignment pairs where one range fully contain the other: ', $contained, \PHP_EOL;
+
+
+$overlapped = 0;
+foreach ($input as [$startA, $endA, $startB, $endB]) {
+    if (($startB <= $startA && $endB >= $startA) || ($startB <= $endA && $startB >= $endA) || ($startA <= $startB && $endA >= $startB) || ($startA <= $endB && $startA >= $endB)) {
+        $overlapped++;
+    }
+}
+
+echo 'Part 2; Assignment pairs with overlap: ', $overlapped, \PHP_EOL;
