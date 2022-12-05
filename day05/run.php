@@ -30,6 +30,7 @@ foreach ($lines as $line) {
         }
     }
 }
+$stackCopy = $stack;
 
 $procedures = array_map(static function (string $line): array {
     return preg_match('/move (\d+) from (\d+) to (\d+)/', $line, $match)
@@ -54,3 +55,18 @@ foreach ($stack as $col => $containers) {
 }
 
 echo 'Part 1; ...: ', $top, \PHP_EOL;
+
+// Part 2
+
+$stack = $stackCopy; // Restore original stack for part 2
+
+foreach ($procedures as [$count, $from, $to]) {
+    array_push($stack[$to], ...array_splice($stack[$from], -$count));
+}
+
+$top = '';
+foreach ($stack as $col => $containers) {
+    $top .= end($containers);
+}
+
+echo 'Part 2; ...: ', $top, \PHP_EOL;
