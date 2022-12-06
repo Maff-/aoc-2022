@@ -27,3 +27,16 @@ foreach ($input as $datastream) {
     }
     echo 'Part 1: Marked end: ', ($i + 4), \PHP_EOL;
 }
+
+// Part 2
+
+foreach ($input as $datastream) {
+    $last = count($datastream) - 14;
+    for ($i = 0; $i < $last; $i++) {
+        $lastFour = array_slice($datastream, $i, 14);
+        if (count(array_unique($lastFour)) === 14) {
+            break;
+        }
+    }
+    echo 'Part 2: Marked end: ', ($i + 14), \PHP_EOL;
+}
