@@ -155,3 +155,29 @@ function sumTotalSizes (Dir $dir, ?callable $filter = null, ?int &$sum = null): 
 $sum = sumTotalSizes($root, static fn(Dir $dir): bool => $dir->getTotalSize() <= 100000);
 
 echo 'Part 1: sum of the total sizes: ', $sum, \PHP_EOL;
+
+// Part 2
+
+$diskSize = 70000000;
+$freeRequired = 30000000;
+$unused = $diskSize - $root->getTotalSize();
+$freeTarget = $freeRequired - $unused;
+
+function collectDirs(Dir $dir, ?callable $filter = null, ?array &$dirs = null): array {
+    $dirs ??= [];
+
+    if (!$filter || $filter($dir)) {
+        $dirs[] = $dir;
+    }
+    foreach ($dir->dirs() as $subDir) {
+        collectDirs($subDir, $filter, $dirs);
+    }
+
+    return $dirs;
+}
+
+/** @var Dir[] $dirs */
+$dirs = collectDirs($root, static fn(Dir $dir): bool => $dir->getTotalSize() >= $freeTarget);
+usort($dirs, static fn (Dir $a, Dir $b) => $a->getTotalSize() <=> $b->getTotalSize());
+
+echo 'Part 2: total size of smallest dir: ', $dirs[0]->getTotalSize(), \PHP_EOL;
