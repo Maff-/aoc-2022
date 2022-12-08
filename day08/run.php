@@ -54,3 +54,34 @@ for ($y = 0; $y < $height; $y++) {
 }
 
 echo 'Part 1: ', $visibleCount, \PHP_EOL;
+
+
+// Part 2
+
+$maxScenicScore = 0;
+for ($y = 0; $y < $height; $y++) {
+    for ($x = 0; $x < $width; $x++) {
+        $pos = [$x, $y];
+        $size = $input[$y][$x];
+        $score = null;
+        foreach ($directions as $dir => [$dX, $dY]) {
+            $visibleCount = 0;
+            for (
+                $cX = $x + $dX, $cY = $y + $dY;
+                $cX >= 0 && $cX < $width && $cY >= 0 && $cY < $height;
+                $cX += $dX, $cY += $dY
+            ) {
+                $check = $input[$cY][$cX];
+                $visibleCount++;
+                if ($check >= $size) {
+                    break;
+                }
+            }
+            $score ??= 1;
+            $score *= $visibleCount;
+        }
+        $maxScenicScore = max($maxScenicScore, $score);
+    }
+}
+
+echo 'Part 2: ', $maxScenicScore, \PHP_EOL;
