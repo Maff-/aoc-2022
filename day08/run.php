@@ -59,8 +59,9 @@ echo 'Part 1: ', $visibleCount, \PHP_EOL;
 // Part 2
 
 $maxScenicScore = 0;
-for ($y = 0; $y < $height; $y++) {
-    for ($x = 0; $x < $width; $x++) {
+// iterate every position, excluding edges
+for ($y = 1; $y < ($height - 1); $y++) {
+    for ($x = 1; $x < ($width - 1); $x++) {
         $pos = [$x, $y];
         $size = $input[$y][$x];
         $score = null;
@@ -76,6 +77,9 @@ for ($y = 0; $y < $height; $y++) {
                 if ($check >= $size) {
                     break;
                 }
+            }
+            if ($visibleCount === 0) {
+                continue 2; // skip this tree, scenic score of 0 won't be good enough
             }
             $score ??= 1;
             $score *= $visibleCount;
