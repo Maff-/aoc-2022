@@ -46,3 +46,34 @@ foreach ($input as [$dir, $times]) {
 $result = array_sum(array_map('array_sum', $trail));
 
 echo 'Part 1: ', $result, \PHP_EOL;
+
+
+// Part 2
+
+$trail = [];
+$knots = 10;
+$head = 0;
+$tail = $knots - 1;
+$knotsPos = array_fill($head, $knots, [0, 0]);
+foreach ($input as [$dir, $times]) {
+    for ($n = 0; $n < $times; $n++) {
+        foreach ($knotsPos as $k => $knotPos) {
+            if ($k === $head) {
+                [$dX, $dY] = $directions[$dir];
+            } else {
+                [$dY, $dX] = [$knotsPos[$k - 1][0] - $knotPos[0], $knotsPos[$k - 1][1] - $knotPos[1]];
+                if ($dX < -1 || $dX > 1 || $dY < -1 || $dY > 1) {
+                    [$dX, $dY] = [max(-1, min(+1, $dX)), max(-1, min(+1, $dY))];
+                } else {
+                    [$dX, $dY] = [0, 0];
+                }
+            }
+            $knotsPos[$k] = [$knotPos[0] + $dY, $knotPos[1] + $dX];
+        }
+        $trail[$knotsPos[$tail][0]][$knotsPos[$tail][1]] = 1;
+    }
+}
+
+$result = array_sum(array_map('array_sum', $trail));
+
+echo 'Part 2: ', $result, \PHP_EOL;
