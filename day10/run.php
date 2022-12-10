@@ -183,3 +183,25 @@ foreach ($input as [$instruction, $arg]) {
 }
 
 echo 'Part 1: ', $result, \PHP_EOL;
+
+
+echo 'Part 2:', \PHP_EOL;
+
+$width = 40;
+$height = 6;
+
+$x = 1;
+$pos = 0;
+foreach ($input as [$instruction, $arg]) {
+    for ($i = 0; $i < $instructionCycles[$instruction]; $i++) {
+        echo ($pos >= $x - 1 && $pos <= $x + 1) ? '█' : ' ';
+        $pos++;
+        if ($pos % $width === 0) {
+            echo \PHP_EOL;
+            $pos = 0;
+        }
+    }
+    if ($instruction === 'addx') {
+        $x += $arg;
+    }
+}
