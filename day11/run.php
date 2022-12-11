@@ -77,3 +77,49 @@ usort($monkeys, static fn ($a, $b): int => $b['inspectCount'] <=> $a['inspectCou
 $result = $monkeys[0]['inspectCount'] * $monkeys[1]['inspectCount'];
 
 echo 'Part 1: Monkey business after 20 rounds: ', $result, \PHP_EOL;
+
+
+// Part 2
+
+function gcd(int $a, int $b): int
+{
+    return $b === 0 ? $a : gcd($b, $a % $b);
+}
+
+function lcm(...$values): int
+{
+    $result = array_shift($values);
+    foreach ($values as $val) {
+        $result = ($val * $result) / gcd($val, $result);
+    }
+
+    return $result;
+}
+
+$lcm = lcm(...array_column($monkeys, 'testDivisor'));
+
+for ($round = 1; $round <= 10000; $round++) {
+    foreach ($monkeys as $monkey => &$data) {
+        foreach ($data['items'] as $itemWorryLevel) {
+            // Inspect
+            $operand = $data['operand'] === 'old' ? $itemWorryLevel : $data['operand'];
+            $itemWorryLevel = match ($data['operator']) {
+                '*' => $itemWorryLevel * $operand,
+                '+' => $itemWorryLevel + $operand,
+            };
+            // Test
+            $test = ($itemWorryLevel % $data['testDivisor']) === 0;
+            // Throw
+            $receivingMonkey = $test ? $data['testTrue'] : $data['testFalse'];
+            $monkeys[$receivingMonkey]['items'][] = $itemWorryLevel % $lcm;
+            $data['inspectCount']++;
+        }
+        $data['items'] = [];
+    }
+    unset($data);
+}
+
+usort($monkeys, static fn ($a, $b): int => $b['inspectCount'] <=> $a['inspectCount']);
+$result = $monkeys[0]['inspectCount'] * $monkeys[1]['inspectCount'];
+
+echo 'Part 2: Monkey business after 10000 rounds: ', $result, \PHP_EOL;
