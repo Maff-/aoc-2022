@@ -32,8 +32,8 @@ EXMAPLE;
 
 $input = explode("\n", trim($input, "\n"));
 
-class File implements \Stringable {
-
+class File implements \Stringable
+{
     public function __construct(
         readonly public string $name,
         readonly public int $size,
@@ -47,8 +47,8 @@ class File implements \Stringable {
     }
 }
 
-class Dir implements \Stringable, \IteratorAggregate {
-
+class Dir implements \Stringable, \IteratorAggregate
+{
     /** @var static[]|File[] */
     private array $content = [];
 
@@ -141,7 +141,8 @@ foreach ($input as $line) {
 
 // Part 1
 
-function sumTotalSizes (Dir $dir, ?callable $filter = null, ?int &$sum = null): int {
+function sumTotalSizes(Dir $dir, ?callable $filter = null, ?int &$sum = null): int
+{
     $sum ??= 0;
     if (!$filter || $filter($dir)) {
         $sum += $dir->getTotalSize();
@@ -163,7 +164,8 @@ $freeRequired = 30000000;
 $unused = $diskSize - $root->getTotalSize();
 $freeTarget = $freeRequired - $unused;
 
-function collectDirs(Dir $dir, ?callable $filter = null, ?array &$dirs = null): array {
+function collectDirs(Dir $dir, ?callable $filter = null, ?array &$dirs = null): array
+{
     $dirs ??= [];
 
     if (!$filter || $filter($dir)) {

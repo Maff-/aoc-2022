@@ -23,11 +23,8 @@ $label = [1 => 'R', 'P', 'S'];
 
 $totalScore = 0;
 foreach ($input as [$m, $r]) {
-//    echo "$m $r -> ";
     $m = ord($m) - $offsetMove;
     $r = ord($r) - $offsetResponse;
-//    echo "$m $r -> ";
-//    echo "{$label[$m]} {$label[$r]} -> ";
 
     $mL = $label[$m];
     $rL = $label[$r];
@@ -35,15 +32,12 @@ foreach ($input as [$m, $r]) {
     if ($m === $r) {
         // draw
         $score = $r + 3;
-//        echo "draw $score\n";
     } elseif (($rL === 'R' && $mL === 'S') || ($rL === 'S' && $mL === 'P') || ($rL === 'P' && $mL === 'R')) {
         // win
         $score = $r + 6;
-//        echo "win  $score\n";
     } else {
         // lose
         $score = $r;
-//        echo "lose $score\n";
     }
     $totalScore += $score;
 }
@@ -59,7 +53,7 @@ $lose = array_flip($win);
 $totalScore = 0;
 foreach ($input as [$m, $r]) {
     $m = ord($m) - $offsetMove;
-    $score = match($r) {
+    $score = match ($r) {
         // lose
         'X' => $lose[$m] + 0,
         // draw

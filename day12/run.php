@@ -60,9 +60,7 @@ foreach ($input as $y => $row) {
     }
 }
 
-CONST X = 0;
-CONST Y = 1;
-$logic = new class($map) implements DomainLogicInterface
+$logic = new class ($map) implements DomainLogicInterface
 {
     public const DIRECTIONS = [
         '>' => [+1, 0], // right
