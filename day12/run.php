@@ -136,3 +136,27 @@ $path = $aStar->run($startPos, $endPos);
 $result = count($path) - 1;
 
 echo 'Part 1: steps taken: ', $result, \PHP_EOL;
+
+
+// Part 2 -- Brute force al possibilities
+
+$shortestPath = null;
+
+foreach ($map as $row) {
+    foreach ($row as $tile) {
+        if ($tile->h === 0) {
+            $path = $aStar->run($tile, $endPos);
+            if (!$path) {
+                continue;
+            }
+            $shortestPath ??= $path;
+            if (count($path) < count($shortestPath)) {
+                $shortestPath = $path;
+            }
+        }
+    }
+}
+
+$result = count($shortestPath) - 1;
+
+echo 'Part 2: steps taken in shortest path: ', $result, \PHP_EOL;
