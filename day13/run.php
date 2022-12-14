@@ -129,11 +129,23 @@ foreach ($input as $n => [$left, $right]) {
     assert($right === (string)$rightPacket, 'Failed to parse right packet; ' . $right);
     $comparison = comparePacketLists($leftPacket, $rightPacket);
     assert($comparison !== 0, 'Equal pairs???');
-    echo sprintf('Pair %d: %s order', $n + 1, $comparison === -1 ? 'right' : 'wrong'), PHP_EOL;
     if ($comparison === -1) {
         $result += $n + 1;
     }
-    echo \PHP_EOL;
 }
 
 echo 'Part 1: Sum of right indices: ', $result, \PHP_EOL;
+
+
+// Part 2
+
+$packets = array_map('PacketList::fromString', array_merge([], ...$input));
+$dividerPackets = [PacketList::fromString('[[2]]'), PacketList::fromString('[[6]]')];
+array_push($packets, ...$dividerPackets);
+
+usort($packets, 'comparePacketLists');
+$index1 = array_search($dividerPackets[0], $packets, true) + 1;
+$index2 = array_search($dividerPackets[1], $packets, true) + 1;
+$result = $index1 * $index2;
+
+echo 'Part 2: Decoder key: ', $result, \PHP_EOL;
