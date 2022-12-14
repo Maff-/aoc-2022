@@ -17,8 +17,6 @@ const Y = 1;
 const ROCK = '#';
 const AIR = '.';
 
-// Part 1
-
 $moves = [
     [-0, 1], // down
     [-1, 1], // down-left
@@ -50,12 +48,15 @@ foreach ($input as $coords) {
         [$xA, $yA] = $coord;
     }
 }
+$mapBackup = $map;
 
 $sandSource = [500, 0];
 //$map[$sandSource[Y]][$sandSource[X]] = '+';
 
 $width = $maxX - $minX + 1;
 $height = $maxY - $minY + 1;
+
+// Part 1
 
 $units = 0;
 
@@ -85,3 +86,37 @@ while (true) {
 }
 
 echo 'Part 1: units of sand rested: ', $units, \PHP_EOL;
+
+
+// Part 2
+
+$map = $mapBackup;
+$floorY = $maxY + 2;
+$units = 0;
+
+while (true) {
+    $sandPos = $sandSource;
+    while (true) {
+        $moved = false;
+        foreach ($moves as [$dX, $dY]) {
+            $x = $sandPos[X] + $dX;
+            $y = $sandPos[Y] + $dY;
+            $foo = ($y === $floorY ? ROCK : null) ?? $map[$y][$x] ?? AIR;
+            if ($foo === AIR) {
+                $sandPos = [$x, $y];
+                $moved = true;
+                break;
+            }
+        }
+        if (!$moved) {
+            $units++;
+            $map[$sandPos[Y]][$sandPos[X]] = 'O';
+            if ($sandPos === $sandSource) {
+                break 2;
+            }
+            break;
+        }
+    }
+}
+
+echo 'Part 2: units of sand rested: ', $units, \PHP_EOL;
