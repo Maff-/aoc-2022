@@ -28,8 +28,6 @@ $input = array_map(static fn(array $positions): array => array_map('intval', arr
 
 // Part 1
 
-$map = [];
-
 $targetY = $useExample ? 10 : 2000000;
 $targetLine = [];
 $ranges = [];
@@ -68,3 +66,79 @@ foreach ($ranges as [$min, $max]) {
 $result = count($line);
 
 echo 'Part 1: ', $result, \PHP_EOL;
+
+
+// Part 2
+
+function mergeRanges(array $ranges, bool $mergeTouching = true): array
+{
+    $maxDiff = $mergeTouching ? 1 : 0;
+    $mergedRanges = [array_shift($ranges)];
+    while (true) {
+        ksort($ranges);
+        $foo = false;
+        while (count($ranges)) {
+            $merged = false;
+            [$min, $max] = array_shift($ranges);
+            foreach ($mergedRanges as $k => [$eMin, $eMax]) {
+                if (($eMin - $max) > $maxDiff || ($min - $eMax) > $maxDiff) {
+                    continue;
+                }
+                $mergedRanges[$k] = [min($min, $eMin), max($max, $eMax)];
+                $merged = true;
+                $foo = true;
+                break;
+            }
+
+            if (!$merged) {
+                $mergedRanges[] = [$min, $max];
+            }
+        }
+        if ($foo) {
+            $ranges = $mergedRanges;
+            $mergedRanges = [array_shift($ranges)];
+            continue;
+        }
+
+        return $mergedRanges;
+    }
+}
+
+$targetMin = 0;
+$targetMax = $useExample ? 20 : 4000000;
+$xMultiplier = 4000000;
+
+$targetMinY = $targetMin;
+$targetMaxY = $targetMax;
+$ranges = [];
+foreach ($input as $n => [$sX, $sY, $bX, $bY]) {
+    $dX = abs($bX - $sX);
+    $dY = abs($bY - $sY);
+    $bDist = $dX + $dY;
+    [$minY, $maxY] = [max($sY - $bDist, $targetMinY), min($sY + $bDist, $targetMaxY)];
+
+    for ($y = $minY; $y <= $maxY; $y++) {
+        $targetDist = $bDist - abs($y - $sY);
+        $range = [$sX - $targetDist, $sX + $targetDist];
+        $ranges[$y][] = $range;
+    }
+}
+
+$result = null;
+foreach ($ranges as $y => $xRanges) {
+    $xRanges = mergeRanges($xRanges);
+    if (count($xRanges) === 1 && $xRanges[0][0] <= $targetMin && $xRanges[0][1] >= $targetMax) {
+        continue;
+    }
+    if (count($xRanges) === 2 && $xRanges[0][1] + 2 === $xRanges[1][0]) {
+        $x = $xRanges[0][1] + 1;
+        $result = ($x * $xMultiplier) + $y;
+        break;
+    }
+}
+
+if ($result === null) {
+    throw new \RuntimeException('Failed to find beacon! It might be at the edge of the window.');
+}
+
+echo 'Part 2: tuning frequency: ', $result, \PHP_EOL;
